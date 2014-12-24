@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#" xmlns:og="http://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8">
+    <title>CHAMOOREE</title>
+
+    {{ header_meta }}
+
+    <link href="http://www.evernotelife.com/postach/chamooree/gridly.css" rel="stylesheet" />
+    <link href="http://www.evernotelife.com/postach/chamooree/css.css" rel="stylesheet" />
+    <link href='http://fonts.googleapis.com/css?family=Lato:100' rel='stylesheet' type='text/css'>
+    <LINK rel="SHORTCUT ICON" href="http://www.evernotelife.com/postach/chamooree/favicon.ico">
+
+    {% if site.analytics %}
+    <script>
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', '{{ site.analytics }}']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    {% endif %}
+    
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-53494506-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+
+  </head>
+  <body>
+
+    {% if is_login %}
+
+      {{ login_form }}
+
+    {% else %}
+    <div class="wrap">
+      <header class="header">
+      <!-- Site Logo -->
+        <div class="avatar">
+          <a href="/"><img src="http://www.evernotelife.com/postach/chamooree/logo.png" alt="{{ site.author }}" border="0px"></a>
+        </div>
+      <!-- Site Top Menu -->
+      <div class="menu">
+          <div class="topmenu">
+            <ul>
+              <li><a href="/">Home</a></li>
+              {% if pages %}
+              {% for page in pages %}
+              <li><a href="{{ page.permalink }}" class="{{ set_active(page.permalink) }}">{{ page.title }}</a></li>
+              {% endfor %}
+              {% endif %}
+              {% if site.facebook %}
+              <li><a href="/tag/architecture" class="{{ set_active('/tag/architecture') }}">Architecture</a></li>
+              <li><a href="/tag/story" class="{{ set_active('/tag/story') }}">Story</a></li>
+              <li><a href="/tag/pr" class="{{ set_active('/tag/pr') }}">PR</a></li>
+	          {% endif %}
+            </ul>
+        </div>
+      </div> 
+     </header>
+
+      {% if is_home or is_tag %}
+      <div class="post-area">
+
+        {% if posts %}
+        <section itemscope itemtype="http://schema.org/Blog" class="posts">
+        {% for post in posts %}
+          <article itemprop="blogPosts" itemscope itemtype="http://schema.org/BlogPosting" class="blog-post">
+            {% if post.photos %}
+            {% for photo in post.photos %}
+            {% if loop.index == 1 %}
+            <div class="post-image">
+              <a href="{{ post.permalink }}">
+                {% if photo %}
+                <img src="{{ photo.width_600 }}" alt="Picture {{ loop.index }}" border="0px">
+                {% else %}
+                <img src="http://placehold.it/400x300/0eafff/ffffff.png" alt="" border="0px">
+                {% endif %}
+              </a>
+              {% if post.tags %}
+              {% endif %}
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            <div class="post-content">
+            <div class="post-date">
+			  <div class="post-date_m"><time datetime="{{ post.created_at }}">{{ post.created_at.strftime('%b') }}</time></div>
+              <div class="post-date_d"><time datetime="{{ post.created_at }}">{{ post.created_at.strftime('%d') }}</time></div>
+            </div>
+              <div class="post-info">
+              <div class="post-title"><a href="{{ post.permalink }}">{{ post.title }}</a></div>
+			  {% if post.tags %}
+              <div class="post-tag">Category: {{ post.tags|format_tags(humanize=True) }}</div>
+			  {% endif %}
+              </div>
+              {% if post.content|striptags|wordcount > 0 %}
+              <div class="post-con">{{ post.content|striptags|truncate(140) }}</div>
+              <div class="post-link"><a href="{{ post.permalink }}">Continue Reading →</a></div>
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+        </section>
+        {% if not is_tag %}
+        <div class="pagination">
+          {% if pagination.prev %}<a href="{{ pagination.prev }}" class="post-prev">&larr; View Previous Posts</a>{% endif %}
+          {% if pagination.next %}<a href="{{ pagination.next }}" class="post-next">View More Posts &rarr;</a>{% endif %}
+        </div>
+        {% endif %}
+        {% else %}
+        <h2 class="title"><em>No posts yet :(</em></h2>
+        {% endif %}
+
+      {% elif post.type == 'post' %}
+
+      <article itemscope itemtype="http://schema.org/BlogPosting" class="post">
+        <section class="content">
+
+          <div class="post-content-b" data-type-cleanup="true">
+            <header>
+              <h1>{{ post.title }}</h1>
+            </header>
+            <p class="post-date">Published by {{ site.author }}, <time datetime="{{ post.created_at }}">{{ post.created_at|date_format }}</time></p>
+            {{ post.content}}
+          </div>
+		 
+          <div class="post-footer">
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+          </div>
+        </section>
+        {% if site.disqus %}
+        <hr class="large" />
+        <section class="comments">
+          <div id="disqus_thread"></div>
+          <script type="text/javascript">
+          var disqus_shortname = '{{ site.disqus }}';
+          var disqus_url = '{{site.base_url}}{{ post.permalink }}';
+          (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+          </script>
+          <noscript>
+            Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+          </noscript>
+          <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </section>
+        {% endif %}
+      </article>
+      
+      
+      <!--
+      <div class="post-nav">
+        <div class="post-prev"></div>
+        <div class="post-next"></div>
+      </div>
+      -->
+
+      {% elif post.type == 'link' %}
+
+      <article itemscope itemtype="http://schema.org/BlogPosting" class="post">
+        <section class="content">
+          <div class="post-content" data-type-cleanup="true">
+            <header>
+              <h1>{{ link.title }}</h1>
+            </header>
+            <p class="post-date">Published by {{ site.author }}, <time datetime="{{ link.created_at }}">{{ link.created_at|date_format }}</time></p>
+            {{ link.content }}
+            <p class="link-url"><i class="icon-share"></i> <a href="{{ link.url }}">{{ link.url }}</a></p>
+          </div>
+          <div class="post-footer">
+			  <div id="fb-root"></div>
+			  <script>(function(d, s, id) {
+				  var js, fjs = d.getElementsByTagName(s)[0];
+				  if (d.getElementById(id)) return;
+				  js = d.createElement(s); js.id = id;
+				  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
+				  fjs.parentNode.insertBefore(js, fjs);
+				  }(document, 'script', 'facebook-jssdk'));</script>
+			  </div>
+                
+        </section>
+        {% if site.disqus %}
+        <hr class="large" />
+        <section class="comments">
+          <div id="disqus_thread"></div>
+          <script type="text/javascript">
+          var disqus_shortname = '{{ site.disqus }}';
+          var disqus_url = '{{site.base_url}}{{ post.permalink }}';
+          (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+          </script>
+          <noscript>
+            Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+          </noscript>
+          <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </section>
+        {% endif %}
+      </article>
+      <!--
+      <div class="post-nav">
+        <div class="post-prev"></div>
+        <div class="post-next"></div>
+      </div>
+      -->
+
+      {% elif post.type == 'page' %}
+      
+      <div class="page">
+        <div class="post-content" data-type-cleanup="true">
+          <h1>{{ page.title }}</h1>
+          {{ page.content }}
+        </div>
+      </div>
+      
+      {% endif %}
+
+      <footer class="footer">
+      	       
+      </footer>
+    </div>
+	
+	<div class="bottom">
+	<div class="about_box">
+	<div class="bottom_logo"><a href="/"><img src="http://www.evernotelife.com/postach/chamooree/logo.png" alt="{{ site.author }}" border="0px"></a></div>
+	<div class="about"><b>법인명:</b>참우리건축협동조합 | <b>대표자:</b>정태도 | <b>주소:</b><a href="http://map.naver.com/?query=서울특별시+종로구+성균관로16길+9" target="_blank">서울특별시 종로구 성균관로16길 9(명륜1가,1층)</a> | <b>연락처:</b>+82-2-6959-0375</div>
+	</div>
+	<div class="contact">All rights Reserved &copy; <a href="/">{{ site.name }}</a>. Powered by <a href="http://postach.io" target="_blank">Postach.io</a> | Design based on <a href="http://www.heogook.com" target="_blank">HEOGOOK.COM</a></div>
+	<div>
+	</div>	    
+
+
+    {% endif %}
+
+    {{ footer_meta }}
+    <script src="{{ static('themes/gridly/js/main.min.js') }}"></script>
+
+</body>
+</html>
